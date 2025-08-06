@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.LocalDate;
 @Slf4j
 @RestController
@@ -28,8 +29,7 @@ private RoomsAvailabilityService roomsAvailabilityService;
     private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     @PostMapping("booking")
 
-    public ResponseEntity<?> bookRoom(@RequestBody BookingsDto dto){
-        log.info("Booking request received for guest: {}", dto.getGuestname());
+    public ResponseEntity<?> bookRoom(@RequestBody BookingsDto dto) throws IOException {
         return new ResponseEntity<>(bookingService.bookRoom(dto),HttpStatus.OK);
 
 

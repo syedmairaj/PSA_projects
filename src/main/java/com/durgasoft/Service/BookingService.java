@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,16 +27,18 @@ public class BookingService {
     private RoomsAvaliabilityRepository roomsAvaliabilityRepository;
     private BookingsRepository bookingsRepository;
     private PropertyRepository propertyRepository;
+    private PDFGenerator pdfGenerator;
 
 
 
-    public BookingService(RoomsAvaliabilityRepository roomsAvaliabilityRepository, BookingsRepository bookingsRepository,PropertyRepository propertyRepository) {
+    public BookingService(PDFGenerator pdfGenerator,RoomsAvaliabilityRepository roomsAvaliabilityRepository, BookingsRepository bookingsRepository,PropertyRepository propertyRepository) {
         this.roomsAvaliabilityRepository = roomsAvaliabilityRepository;
         this.bookingsRepository = bookingsRepository;
         this.propertyRepository = propertyRepository;
+        this.pdfGenerator =pdfGenerator;
     }
 
-    public ResponseEntity<?> bookRoom(BookingsDto dto) {
+    public ResponseEntity<?> bookRoom(BookingsDto dto) throws IOException {
         if(dto.getPropertyId()==null || dto.getMobile() ==null){
             throw new IllegalArgumentException("select property and mobile filed cannot be blank");
         }
@@ -57,8 +60,11 @@ public class BookingService {
         bookings.setProperty(property);
         bookings.setRoomsAvaliability(roomsAvaliability);
         bookings.setMobile(dto.getMobile());
-        bookings.setPdf_invoice("sent an email");
+       // bookings.setPdf_invoice("sent an email");
+
         Bookings book1 = bookingsRepository.save(bookings);
+        pdfGenerator.generatePDFInvoice(book1);
+
         //Entity to Dto manual conversation
         BookingsDto bookingsDto = new BookingsDto();
         bookingsDto.setId(book1.getId());;
