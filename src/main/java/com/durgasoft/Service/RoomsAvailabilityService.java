@@ -68,6 +68,9 @@ public class RoomsAvailabilityService {
         City city = property1.getCity();
         List<RoomsAvaliability> rooms = roomsrepo.searchByRooms(
                 fromDate,toDate,roomType);
+//        if(!dto.getDate().equals(toDate)){
+//            throw new IllegalArgumentException("room is not available for this date");
+//        }
         //Entity to Dto
         // below stream uses to convert from entity to do and filter city coz this city filed is not there in roomsavaliabiitlty table, this allows you to process each element using functional-style code (map, filter, etc.).
         List<RoomsAvaliabilityDto> roomsDtos = rooms.stream().map(room-> {

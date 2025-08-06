@@ -30,7 +30,8 @@ public class RoomsAvaliabilityController {
 
 
     //Search rooms by from date and to date
-
+    //use below url to search from postman
+    //http://localhost:8081/vi/api/rooms/search/3?fromDate=2025-08-04&toDate=2025-08-08&room_type=delux
     @GetMapping("/search/{propertyId}")
 
     public ResponseEntity<?> searchRooms(@PathVariable long propertyId, RoomsAvaliabilityDto dto,
