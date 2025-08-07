@@ -49,6 +49,13 @@
 			<artifactId>layout</artifactId>
 			<version>7.2.5</version>
 		</dependency>
+		<!--Twilio sms integration-->
+		<dependency>
+			<groupId>com.twilio.sdk</groupId>
+			<artifactId>twilio</artifactId>
+			<version>8.31.1</version>
+		</dependency>
+
 
 		<!--AWS dependency for logging and using s3 bucket-->
 		<dependency>

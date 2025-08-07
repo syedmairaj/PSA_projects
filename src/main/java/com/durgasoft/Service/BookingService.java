@@ -28,14 +28,18 @@ public class BookingService {
     private BookingsRepository bookingsRepository;
     private PropertyRepository propertyRepository;
     private PDFGenerator pdfGenerator;
+    private SMSService smsService;
 
 
 
-    public BookingService(PDFGenerator pdfGenerator,RoomsAvaliabilityRepository roomsAvaliabilityRepository, BookingsRepository bookingsRepository,PropertyRepository propertyRepository) {
+    public BookingService(PDFGenerator pdfGenerator,RoomsAvaliabilityRepository roomsAvaliabilityRepository,
+                          BookingsRepository bookingsRepository,
+                          PropertyRepository propertyRepository,SMSService smsService) {
         this.roomsAvaliabilityRepository = roomsAvaliabilityRepository;
         this.bookingsRepository = bookingsRepository;
         this.propertyRepository = propertyRepository;
         this.pdfGenerator =pdfGenerator;
+        this.smsService=smsService;
     }
 
     public ResponseEntity<?> bookRoom(BookingsDto dto) throws IOException {
@@ -63,7 +67,10 @@ public class BookingService {
        // bookings.setPdf_invoice("sent an email");
 
         Bookings book1 = bookingsRepository.save(bookings);
+        //sms integrarion
+        smsService.sendSms("+919642421652","Hotel booking is done" +" "+bookings.getGuestname());
         pdfGenerator.generatePDFInvoice(book1);
+
 
         //Entity to Dto manual conversation
         BookingsDto bookingsDto = new BookingsDto();
