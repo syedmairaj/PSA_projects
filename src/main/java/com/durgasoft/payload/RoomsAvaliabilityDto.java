@@ -19,6 +19,7 @@ public class RoomsAvaliabilityDto {
     private Long propertyId;
     private City city;
 
+
     public City getCity() {
         return city;
     }

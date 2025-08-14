@@ -25,6 +25,11 @@ List<RoomsAvaliability>searchByRooms(
     Optional<RoomsAvaliability> findByDateAndRoomType(@Param("propertyId") Long propertyId,
                                                       @Param("roomtype") String roomtype,
                                                       @Param("fromDate") LocalDate fromDate);
+
+
+
+  List<RoomsAvaliability>searchByPrice(Long price);
+  Optional<RoomsAvaliability>findByPrice(Long price);
 }
 
 // @Query("Select r from RoomsAvaliability r  where r.roomtype = :roomtype   AND r.date between :fromDate AND :toDate" )

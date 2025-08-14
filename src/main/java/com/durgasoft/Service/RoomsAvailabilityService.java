@@ -3,16 +3,21 @@ package com.durgasoft.Service;
 
 import com.durgasoft.Entity.City;
 import com.durgasoft.Entity.Property;
+import com.durgasoft.Entity.Reviews;
 import com.durgasoft.Entity.RoomsAvaliability;
 import com.durgasoft.Repository.PropertyRepository;
 import com.durgasoft.Repository.RoomsAvaliabilityRepository;
+import com.durgasoft.payload.ReviewDto;
 import com.durgasoft.payload.RoomsAvaliabilityDto;
+import com.durgasoft.payload.SearchByPriceDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -84,5 +89,38 @@ public class RoomsAvailabilityService {
 
 
 
+    }
+
+
+//search by price
+
+    public ResponseEntity<?> searchByPrice(Long price) {
+
+        if (price == null || price <= 0) {
+            throw new IllegalArgumentException("price is required or price cannot be less than 0");
+        }
+        List<RoomsAvaliability> findPrice = roomsrepo.searchByPrice(price);
+        if(findPrice.isEmpty()){
+            throw new IllegalArgumentException("cannot find hotel for this price");
+        }
+
+        List<SearchByPriceDto> result = findPrice.stream().map(room-> {
+            SearchByPriceDto data1 = new SearchByPriceDto();
+           data1.setPrice(room.getPrice());
+           data1.setRoomType(room.getRoomtype());
+           Property property = room.getProperty();
+           if(property!=null) {
+               data1.setPropertyName(property.getPropertyName());
+               data1.setCountry(property.getCountry().getCountry());
+               data1.setRooms(property.getNumberOfBedrooms());
+               data1.setBathrooms(property.getNumberOfBathrooms());
+               data1.setCity(property.getCity());
+
+           }
+                return  data1;
+
+                   }).collect(Collectors.toList());
+
+            return new ResponseEntity<>(result,HttpStatus.OK);
     }
 }

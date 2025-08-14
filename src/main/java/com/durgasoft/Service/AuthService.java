@@ -4,6 +4,7 @@ import com.durgasoft.Entity.Signup;
 import com.durgasoft.Exception.InvalidCredentialsException;
 import com.durgasoft.Exception.TestNotFound;
 import com.durgasoft.Repository.SignupRepository;
+import com.durgasoft.payload.OTPDto;
 import com.durgasoft.payload.SignUpDto;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.security.auth.login.CredentialException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,6 +30,10 @@ public class AuthService {
     private ModelMapper mapper;
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private OTPService otpService;
+    @Autowired
+    SMSService smsService;
 
     private SignupRepository signupRepository;
 
@@ -83,11 +90,11 @@ public class AuthService {
 //    return null;
 
 //    }
-//new Login
+//new Login generate otp post login
 
 
 
-    public String login(SignUpDto signUpDto) {
+    public OTPDto login(SignUpDto signUpDto) {
         if(signUpDto ==null || signUpDto.getLogin() ==null || signUpDto.getPassword()==null){
             throw new InvalidCredentialsException("Username and password cannot be null or empty");
         }
@@ -96,14 +103,41 @@ public class AuthService {
             throw new InvalidCredentialsException("User not found");
         }
         Signup signdata = findlogin.get();
+
         if(!BCrypt.checkpw(signUpDto.getPassword(),signdata.getPassword())){
             throw new InvalidCredentialsException("Password is incorrect");
         }
-        return jwtService.generateToken(signdata.getUsername());
+            String otp = otpService.generateOtp(signdata.getMobile());
+        smsService.sendSms("+"+signdata.getMobile(),otp);
+        Map<String,String> response = new HashMap<>();
+        response.put("message","OTP send");
+        response.put("mobile", signdata.getMobile());
+
+       // return jwtService.generateToken(signdata.getUsername());
+        OTPDto otpDto = new OTPDto();
+        otpDto.setOtp(otp);
+        otpDto.setMobile(signdata.getMobile());
+        return otpDto;
 
     }
 
+//old login with jwt token generate
 
+//    public String login(SignUpDto signUpDto) {
+//        if(signUpDto ==null || signUpDto.getLogin() ==null || signUpDto.getPassword()==null){
+//            throw new InvalidCredentialsException("Username and password cannot be null or empty");
+//        }
+//        Optional<Signup> findlogin =signupRepository.findByLogin(signUpDto.getLogin());
+//        if(findlogin.isEmpty()){
+//            throw new InvalidCredentialsException("User not found");
+//        }
+//        Signup signdata = findlogin.get();
+//        if(!BCrypt.checkpw(signUpDto.getPassword(),signdata.getPassword())){
+//            throw new InvalidCredentialsException("Password is incorrect");
+//        }
+//        return jwtService.generateToken(signdata.getUsername());
+//
+//    }
 
 //del
 
