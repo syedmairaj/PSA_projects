@@ -5,6 +5,7 @@ public class JwtToken {
     private String token;
     private String type;
 
+
     public String getToken() {
         return token;
     }
@@ -20,4 +21,6 @@ public class JwtToken {
     public void setType(String type) {
         this.type = type;
     }
+
+
 }

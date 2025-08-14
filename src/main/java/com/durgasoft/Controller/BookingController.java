@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
-@Slf4j
+
 @RestController
 @RequestMapping("/vi/api/rooms/")
 public class BookingController {
@@ -26,7 +26,7 @@ private RoomsAvailabilityService roomsAvailabilityService;
         this.roomsAvailabilityService = roomsAvailabilityService;
     }
     //this get the logs
-    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
+  //  private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     @PostMapping("booking")
 
     public ResponseEntity<?> bookRoom(@RequestBody BookingsDto dto) throws IOException {

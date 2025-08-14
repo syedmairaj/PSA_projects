@@ -40,6 +40,11 @@ public class Bookings {
     @Column(name = "pdf_invoice")
     private String pdf_invoice;
 
+   //Optimistic locking system, when single room is available in a hotel and two users trying to book both are updating the details but
+    // version number assigned 1 but when anyone of the user submit the version no change to 2, so when other user submit it will
+   // say no rooms are available,
+    @Version
+    private Long version;
 
     public Long getId() {
         return id;
@@ -103,5 +108,13 @@ public class Bookings {
 
     public void setRoomsAvaliability(RoomsAvaliability roomsAvaliability) {
         this.roomsAvaliability = roomsAvaliability;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

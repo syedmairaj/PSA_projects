@@ -95,5 +95,12 @@ public class ReviewDto {
     }
 
     public interface ReviewProjection {
+
+
     }
+//    public ReviewDto(){
+//
+//    }
+
+
 }

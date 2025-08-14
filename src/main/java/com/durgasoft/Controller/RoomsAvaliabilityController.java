@@ -1,12 +1,16 @@
 package com.durgasoft.Controller;
 
+import com.durgasoft.Entity.RoomsAvaliability;
 import com.durgasoft.Service.RoomsAvailabilityService;
 import com.durgasoft.payload.RoomsAvaliabilityDto;
+import com.durgasoft.payload.SearchByPriceDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/vi/api/rooms")
@@ -40,5 +44,17 @@ public class RoomsAvaliabilityController {
         return roomsAvailabilityService.searchRooms(propertyId,dto,fromDate,toDate,room_type);
        // return new ResponseEntity<>(searchHotelRooms,HttpStatus.OK);
     }
+// search hotel by price
+
+    @GetMapping("/price")
+
+    public ResponseEntity<?> searchByPrice(@RequestParam Long price){
+        return roomsAvailabilityService.searchByPrice(price);
+    }
+
+
+
+
+
 
 }

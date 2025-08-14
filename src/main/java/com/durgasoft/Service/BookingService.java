@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -64,29 +65,33 @@ public class BookingService {
         bookings.setProperty(property);
         bookings.setRoomsAvaliability(roomsAvaliability);
         bookings.setMobile(dto.getMobile());
-       // bookings.setPdf_invoice("sent an email");
+       bookings.setPdf_invoice("generated");
+try {
+    Bookings book1 = bookingsRepository.save(bookings);
+    //sms integrarion
+   // smsService.sendSms("+919642421652","Hotel booking is done" +" "+bookings.getGuestname());
+   pdfGenerator.generatePDFInvoice(book1);
 
-        Bookings book1 = bookingsRepository.save(bookings);
-        //sms integrarion
-        smsService.sendSms("+919642421652","Hotel booking is done" +" "+bookings.getGuestname());
-        pdfGenerator.generatePDFInvoice(book1);
+
+    //Entity to Dto manual conversation
+    BookingsDto bookingsDto = new BookingsDto();
+    bookingsDto.setId(book1.getId());;
+    bookingsDto.setPropertyId(property.getId());
+    bookingsDto.setGuestname(book1.getGuestname());
+    bookingsDto.setEmail(book1.getEmail());;
+    bookingsDto.setMobile(bookings.getMobile());
+    bookingsDto.setBookingstatus(book1.getBooking_status());
+    bookingsDto.setFromDate(roomsAvaliability.getDate());
+    bookingsDto.setPdfinvoice(book1.getPdf_invoice());
+    bookingsDto.setRoomtype(roomsAvaliability.getRoomtype());
+    bookingsDto.setPrice(roomsAvaliability.getPrice());
+    return new ResponseEntity<>(bookingsDto, HttpStatus.OK);
+}catch(ObjectOptimisticLockingFailureException e){
+ throw new RuntimeException("Record was modified by another transaction", e);
+        }
 
 
-        //Entity to Dto manual conversation
-        BookingsDto bookingsDto = new BookingsDto();
-        bookingsDto.setId(book1.getId());;
-        bookingsDto.setPropertyId(property.getId());
-        bookingsDto.setGuestname(book1.getGuestname());
-        bookingsDto.setEmail(book1.getEmail());;
-        bookingsDto.setMobile(bookings.getMobile());
-        bookingsDto.setBookingstatus(book1.getBooking_status());
-        bookingsDto.setFromDate(roomsAvaliability.getDate());
-        bookingsDto.setPdfinvoice(book1.getPdf_invoice());
-        bookingsDto.setRoomtype(roomsAvaliability.getRoomtype());
-        bookingsDto.setPrice(roomsAvaliability.getPrice());
-       // BookingsDto dtosaved = mapper.map(book1, BookingsDto.class);
 
-        return new ResponseEntity<>(bookingsDto, HttpStatus.OK);
         }
 
 

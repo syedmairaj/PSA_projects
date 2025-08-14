@@ -30,7 +30,7 @@ public class SecurityConfig {
         //urls doesnt require token public urls come to this url
         http.authorizeHttpRequests()
           //doesnt require token open to all
-                .requestMatchers("/api/vi/app/signup" ,"/api/vi/app/login","/api/vi/property/signup",
+                .requestMatchers("/api/vi/app/signup" ,"/api/vi/app/**","/api/vi/property/signup",
                         "/vi/api/images/upload/file/**","/vi/api/rooms/addroom/property/**" ,"/vi/api/rooms/**" )
                 .permitAll()
                 //api/vi/property/add can only access by property_owner  hasRole can use only one role, hasanyrole can use many roles,
