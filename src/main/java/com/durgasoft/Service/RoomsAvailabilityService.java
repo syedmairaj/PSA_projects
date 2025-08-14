@@ -103,7 +103,7 @@ public class RoomsAvailabilityService {
         if(findPrice.isEmpty()){
             throw new IllegalArgumentException("cannot find hotel for this price");
         }
-
+//create new list and the collection framework to map each price and pull the data accordingly 
         List<SearchByPriceDto> result = findPrice.stream().map(room-> {
             SearchByPriceDto data1 = new SearchByPriceDto();
            data1.setPrice(room.getPrice());
